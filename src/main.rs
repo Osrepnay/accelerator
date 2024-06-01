@@ -124,7 +124,10 @@ OPTIONS:
                 }
             }
             // should never be err? it is blocking
-            Err(_) => (),
+            Err(_) => {
+                eprintln!("Error: got back Err from next_event (has the device been closed?)");
+                std::process::exit(2);
+            },
         }
     }
 }
