@@ -1,1 +1,1 @@
-ACTION=="add", KERNEL=="event*", SUBSYSTEM=="input", ATTRS{name}=="Logitech M570", TAG+="systemd", ENV{SYSTEMD_WANTS}="accelerator@logitechm570.service", SYMLINK+="logitechm570"
+ACTION=="add", KERNEL=="event*", SUBSYSTEMS=="usb", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="c52b", TAG+="systemd", ENV{SYSTEMD_WANTS}="accelerator@logitechrecv.service", SYMLINK+="logitechrecv"
