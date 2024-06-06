@@ -68,7 +68,8 @@ OPTIONS:
     let mut y = 0.0;
     let mut x_accum = 0.0;
     let mut y_accum = 0.0;
-    let mut frame_last = 0;
+    let mut frame_last_sec = 0;
+    let mut frame_last_us = 0;
     let mut sync_flag = ReadFlag::NORMAL; // normal if normal, sync if got SYN_DROPPED
     loop {
         let event = source.next_event(sync_flag | ReadFlag::BLOCKING);
@@ -86,7 +87,8 @@ OPTIONS:
                     EventCode::EV_REL(EV_REL::REL_X) => x = event.value as f64 + x_accum,
                     EventCode::EV_REL(EV_REL::REL_Y) => y = event.value as f64 + y_accum,
                     EventCode::EV_SYN(EV_SYN::SYN_REPORT) => {
-                        let change_ms = (event.time.tv_usec as f64 - frame_last as f64) / 1000.0;
+                        let change_ms = (event.time.tv_sec as f64 - frame_last_sec as f64) * 1000.0
+                            + (event.time.tv_usec as f64 - frame_last_us as f64) / 1000.0;
                         let dist = (x * x + y * y).sqrt();
                         let sensitivity = factor(
                             args.sens_mult,
@@ -118,7 +120,8 @@ OPTIONS:
 
                         x = 0.0;
                         y = 0.0;
-                        frame_last = event.time.tv_usec;
+                        frame_last_sec = event.time.tv_sec;
+                        frame_last_us = event.time.tv_usec;
                     }
                     _ => out.write_event(&event)?,
                 }
@@ -127,7 +130,7 @@ OPTIONS:
             Err(_) => {
                 eprintln!("Error: got back Err from next_event (has the device been closed?)");
                 std::process::exit(2);
-            },
+            }
         }
     }
 }
