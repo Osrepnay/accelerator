@@ -77,6 +77,7 @@ OPTIONS:
             Ok((status, event)) => {
                 if status == ReadStatus::Sync {
                     // eat syncs until done (we probably don't need whats in it)
+                    eprintln!("Warning: got SYN_DROPPED");
                     sync_flag = ReadFlag::SYNC;
                     continue;
                 } else {
