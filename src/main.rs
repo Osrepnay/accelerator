@@ -10,7 +10,7 @@ fn factor(sens_multiplier: f64, accel: f64, cap: f64, offset: f64, speed: f64) -
     if speed < offset {
         sens_multiplier
     } else {
-        f64::min(sens_multiplier * accel.mul_add(speed - offset, 1.0), cap)
+        sens_multiplier * f64::min(accel.mul_add(speed - offset, 1.0), cap)
     }
 }
 
