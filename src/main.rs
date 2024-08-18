@@ -41,7 +41,7 @@ USAGE: accelerator [OPTIONS] <device-file>
 
 OPTIONS:
   -m SENS_MULTIPLIER    The amount graph of sensitivity is scaled by
-  -a ACCELERATION       Slope of sensitivity graph
+  -a ACCELERATION       Slope of sensitivity graph before scaling
   -c SENS_CAP           Sets the maximum sensitivity
                         Default: infinity
   -o INPUT_OFFSET       Maximum cursor speed before sensitivity
