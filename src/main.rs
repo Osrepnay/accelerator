@@ -85,8 +85,8 @@ OPTIONS:
                 }
 
                 match event.event_code {
-                    EventCode::EV_REL(EV_REL::REL_X) => x = event.value as f64 + x_accum,
-                    EventCode::EV_REL(EV_REL::REL_Y) => y = event.value as f64 + y_accum,
+                    EventCode::EV_REL(EV_REL::REL_X) => x = event.value as f64,
+                    EventCode::EV_REL(EV_REL::REL_Y) => y = event.value as f64,
                     EventCode::EV_SYN(EV_SYN::SYN_REPORT) => {
                         let change_ms = (event.time.tv_sec as f64 - frame_last_sec as f64) * 1000.0
                             + (event.time.tv_usec as f64 - frame_last_us as f64) / 1000.0;
@@ -98,8 +98,8 @@ OPTIONS:
                             args.offset,
                             dist / change_ms as f64,
                         );
-                        x *= sensitivity;
-                        y *= sensitivity;
+                        x = x.mul_add(sensitivity, x_accum);
+                        y = y.mul_add(sensitivity, y_accum);
 
                         let x_rounded = x.round() as i32;
                         let y_rounded = y.round() as i32;
