@@ -1,0 +1,3 @@
+#!/bin/sh
+
+{ cat /etc/accelerator/$1 && echo "/dev/$1"; } | xargs accelerator

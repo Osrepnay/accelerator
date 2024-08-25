@@ -6,4 +6,4 @@ After=dev-%i.device
 [Service]
 Type=simple
 Restart=no
-ExecStart=/bin/accelerator -m 1 -a 0.4 /dev/%i
+ExecStart=/usr/bin/accelerator-fileconfig %i
