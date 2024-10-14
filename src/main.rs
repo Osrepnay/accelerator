@@ -70,18 +70,20 @@ OPTIONS:
     let mut y_accum = 0.0;
     let mut frame_last_sec = 0;
     let mut frame_last_us = 0;
-    let mut sync_flag = ReadFlag::NORMAL; // normal if normal, sync if got SYN_DROPPED
     loop {
-        let event = source.next_event(sync_flag | ReadFlag::BLOCKING);
+        let event = source.next_event(ReadFlag::NORMAL | ReadFlag::BLOCKING);
         match event {
             Ok((status, event)) => {
                 if status == ReadStatus::Sync {
                     // eat syncs until done (we probably don't need whats in it)
                     eprintln!("Warning: got SYN_DROPPED");
-                    sync_flag = ReadFlag::SYNC;
+                    loop {
+                        let sync_event = source.next_event(ReadFlag::SYNC | ReadFlag::BLOCKING);
+                        if sync_event.is_err() {
+                            break;
+                        }
+                    }
                     continue;
-                } else {
-                    sync_flag = ReadFlag::NORMAL;
                 }
 
                 match event.event_code {
